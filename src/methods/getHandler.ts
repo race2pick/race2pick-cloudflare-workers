@@ -16,7 +16,7 @@ export default async function getHandler(req: Request, env: Env, ctx: Context): 
 	if (!slug) {
 		return new Response(null, {
 			status: 404,
-			statusText: 'Not Found yaa',
+			statusText: 'Not Found',
 		});
 	}
 

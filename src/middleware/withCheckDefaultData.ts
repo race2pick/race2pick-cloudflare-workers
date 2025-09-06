@@ -1,3 +1,5 @@
+import { ResponseJson } from '../utils/networks';
+
 interface Params {
 	slug: string;
 }
@@ -23,16 +25,20 @@ export default function withCheckDefaultData(handler: FetchHandler<Env>) {
 		const { body, params } = ctx.props || {};
 
 		if (method === 'POST' && body?.data === defaultData) {
-			return Response.json({ slug: defaultSlug });
+			return ResponseJson(request, env, { slug: defaultSlug });
 		}
 
 		if (method === 'GET' && params?.slug === defaultSlug) {
-			return new Response(JSON.stringify({ data: defaultData }), {
-				headers: {
-					'content-type': 'application/json',
-					'Cache-Control': 'public, max-age=60',
-				},
-			});
+			return ResponseJson(
+				request,
+				env,
+				{ data: defaultData },
+				{
+					headers: {
+						'Cache-Control': 'public, max-age=86400',
+					},
+				}
+			);
 		}
 
 		return handler(request, env, ctx);

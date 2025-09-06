@@ -1,10 +1,12 @@
+import { ResponseText } from '../utils/networks';
+
 export default function withPostJson(handler: FetchHandler<Env>) {
 	return async (request: Request, env: Env, ctx: ExecutionContext) => {
 		if (request.method.toLocaleUpperCase() === 'POST') {
 			const contentType = request.headers.get('content-type') || '';
 
 			if (!contentType.includes('application/json')) {
-				return new Response(null, {
+				return ResponseText(request, env, null, {
 					status: 415,
 					statusText: 'Unsupported Media Type',
 				});
@@ -19,7 +21,7 @@ export default function withPostJson(handler: FetchHandler<Env>) {
 					ctx.props = { body };
 				}
 			} catch {
-				return new Response(null, {
+				return ResponseText(request, env, null, {
 					status: 400,
 					statusText: 'Bad Request',
 				});

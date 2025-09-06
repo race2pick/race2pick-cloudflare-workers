@@ -1,4 +1,5 @@
 import read from '../utils/kv';
+import { ResponseJson } from '../utils/networks';
 
 interface Params {
 	slug: string;
@@ -23,11 +24,15 @@ export default async function getHandler(req: Request, env: Env, ctx: Context): 
 	const data = await read(env, slug);
 
 	if (data) {
-		return new Response(JSON.stringify({ data }), {
-			headers: {
-				'content-type': 'application/json',
-				'Cache-Control': 'public, max-age=60',
-			},
-		});
+		return ResponseJson(
+			req,
+			env,
+			{ data },
+			{
+				headers: {
+					'Cache-Control': 'public, max-age=86400',
+				},
+			}
+		);
 	}
 }

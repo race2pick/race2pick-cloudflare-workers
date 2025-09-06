@@ -1,4 +1,5 @@
 import { add } from '../utils/kv';
+import { ResponseJson, ResponseText } from '../utils/networks';
 
 interface Body {
 	data: string;
@@ -10,9 +11,9 @@ interface Context extends ExecutionContext {
 	};
 }
 
-export default async function postHandler(env: Env, ctx: Context): Promise<Response | undefined | void> {
+export default async function postHandler(req: Request, env: Env, ctx: Context): Promise<Response | undefined | void> {
 	if (typeof ctx.props?.body?.data !== 'string') {
-		return new Response(null, {
+		return ResponseText(req, env, null, {
 			status: 400,
 			statusText: 'Bad Request',
 		});
@@ -21,6 +22,6 @@ export default async function postHandler(env: Env, ctx: Context): Promise<Respo
 	const slug = await add(env, ctx.props.body.data);
 
 	if (slug) {
-		return Response.json({ slug });
+		return ResponseJson(req, env, { slug });
 	}
 }
